@@ -1,0 +1,46 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_Prod`(in operation int,in idP int ,in nameP nvarchar(255),in priceP int,in amountP int)
+BEGIN
+	CASE operation
+    
+		#get all flowers
+		WHEN 1 THEN
+			SELECT * FROM flowershop.products;
+            
+		#get flower by name
+		WHEN 2 THEN 
+			SELECT * FROM flowershop.products
+            WHERE name = nameP;
+            
+		#change amount
+		WHEN 3 THEN 
+		SET SQL_SAFE_UPDATES = 0;
+			UPDATE flowershop.products
+			SET amount = amountP
+			WHERE name = nameP;
+            SELECT * FROM flowershop.products;
+            
+		#change amount & price
+		WHEN 4 THEN 
+        SET SQL_SAFE_UPDATES = 0;
+			UPDATE flowershop.products
+			SET amount = amountP,price = priceP
+			WHERE name = nameP;
+            SELECT * FROM flowershop.products;
+            
+		#add flower
+        when 5 then
+        SET SQL_SAFE_UPDATES = 0;
+			INSERT INTO flowershop.products(id,name,price,amount)
+			values (idP,nameP,priceP,amountP);
+            select * from flowershop.products;
+			
+		#remove flower
+        when 6 then 
+        SET SQL_SAFE_UPDATES = 0;
+			DELETE FROM flowershop.products
+			WHERE name=nameP;
+            select * from flowershop.products;
+            
+		ELSE BEGIN END;
+	END CASE;
+END

@@ -1,0 +1,96 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cart_procedure`(in operation int,in cId int,in pId int,in pA int)
+BEGIN
+	case operation
+		
+        
+        #get client cart
+		when 1 then
+		select * from flowershop.clientcart
+        where clientId=cId;
+        
+        #set amount
+        when 2 then
+        SET SQL_SAFE_UPDATES = 0;
+			UPDATE flowershop.clientcart
+			SET productAmount = pA, productId = pId
+			WHERE clientId = cId and productId = pId;
+            select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id
+            and clientcart.clientId = cId;
+        
+        #set amount and get all table
+        when 21 then
+        SET SQL_SAFE_UPDATES = 0;
+			UPDATE flowershop.clientcart
+			SET productAmount = pA, productId = pId
+			WHERE clientId = cId and productId = pId;
+            select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id;
+        
+        
+        #add new item to cart    
+		when 3 then 
+			insert into flowershop.clientcart(clientId,productId,productAmount)
+            values (cId,pId,pA);
+            select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id
+            and clientcart.clientId = cId;
+        
+		#add new item to cart and return all table
+		when 31 then 
+			insert into flowershop.clientcart(clientId,productId,productAmount)
+            values (cId,pId,pA);
+            select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id;
+            
+        
+        
+        #get all table
+        when 4 then
+			select * from flowershop.clientcart;
+        
+        #remove item 
+        when 5 then
+			delete from  flowershop.clientcart
+			where clientId = cId and pId=productId;
+			select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id
+            and clientcart.clientId = cId;
+            
+		#remove item and get all the table
+        when 51 then
+			delete from  flowershop.clientcart
+			where clientId = cId and pId=productId;
+			select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id;
+            
+            
+            
+		#remove all items for some user
+        when 6 then 
+			delete from flowershop.clientcart
+            where clientId = cId;
+            select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id
+            and clientcart.clientId = cId;
+            
+            
+		#remove all items for some user and return all table
+        when 7 then 
+			delete from flowershop.clientcart
+            where clientId = cId;
+            select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id;
+            
+            
+            
+		#get table with flowers for user
+        when 9 then 
+			select * from flowershop.clientcart
+            INNER JOIN products on clientcart.productId = products.id
+            and clientcart.clientId = cId;
+            
+            
+		else begin end;
+	end case;
+END

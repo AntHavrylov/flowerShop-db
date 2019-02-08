@@ -1,0 +1,38 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_procedure`(in operation int,in idU int ,in loginU varchar(255),in paswdU varchar(255),in mailU varchar(255))
+BEGIN
+	CASE operation
+    
+		#add new user
+		WHEN 1 then
+		SET SQL_SAFE_UPDATES = 0;
+			INSERT INTO flowershop.users(id,login,password,mail)
+			values (idU,loginU,paswdU,mailU);
+            select * from flowershop.users;
+        
+        #update user data by id
+        WHEN 2 then
+        SET SQL_SAFE_UPDATES = 0;
+			UPDATE flowershop.users
+			SET login = loginU,password=paswdU,mail=mailU
+            WHERE id = idU;
+            select * from flowershop.users;
+		
+        #delete user by id
+        when 3 then 
+        SET SQL_SAFE_UPDATES = 0;
+			DELETE FROM flowershop.users
+			WHERE id=idU;
+            select * from flowershop.users;
+
+		#get user list
+        WHEN 9 then 
+			select * from flowershop.users;
+        
+        #get user by name
+        when 4 then
+			select * from flowershop.users
+			where login = loginU;
+	        
+		ELSE BEGIN END; 
+	END CASE;
+END
